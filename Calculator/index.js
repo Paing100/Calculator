@@ -2,9 +2,11 @@
 const display = document.getElementById('display');
 let calculationDone = false;
 let decimal = false;
+const operators = ["+", "-", "*", "/"];
+// adding 2 dots after zero even if i click . only once
+
 
 function appendToDisplay(input){
-    var operators = ["+", "-", "*", "/"];
     var lastChar = display.value[display.value.length - 1];
 
     // Checking calculation if it's done
@@ -20,37 +22,34 @@ function appendToDisplay(input){
 
     // Check the decimal at length 0
     if(display.value === ""){
-        if (input === "."){
-            display.value = "";            
-            return;
-        }
-        else if(!operators.includes(input)){
-            display.value += input;
-            return;
-        }
+        checkDecimalAtFirst(input);
+        return;
+    }
+
+    if (lastChar === "." && input === "."){
+        return;
     }
 
     // Check the decimal after operators
     if (operators.includes(lastChar)){
-        if (input === "."){
+        checkDecimalAfterOperators(input);
+        return;
+    }
+
+    if (display.value === "0" && !operators.includes(input) && input !== ".") {
+        if (input === "0") {
             return;
         }
-        else if(!operators.includes(input)){
-            display.value += input;
+        else{
+            display.value = input;
             return;
         }
     }
 
     // Checking leading 0 (i.e. 000001)
     if(display.value.length == 1 && display.value === "0"){
-        if (input === "0"){
-            display.value = "0";
-            return;
-        }
-        else if(!operators.includes(input)){
-            display.value += input;
-            return;
-        }
+        checkLeadingZero(input);
+        return;
     }
 
     if (operators.includes(input)){
@@ -79,6 +78,41 @@ function appendToDisplay(input){
     }        
 }
 
+function checkDecimalAtFirst(input){
+        if (input === "."){
+            display.value = "0.";      
+            decimal = true;
+        }
+        // if it's -, allow it
+        else if (input === "-"){
+            display.value = "-";
+        }
+        else if(!operators.includes(input)){
+            display.value += input;
+        }
+}
+
+function checkDecimalAfterOperators(input){
+    if (input === "." && display.value.length > 0){
+        return;
+    }
+    else if(!operators.includes(input)){
+        display.value += input;
+        return;
+    }
+}
+
+function checkLeadingZero(input){
+    if (input === "0"){
+        display.value = "0";
+        return;
+    }
+    else if(!operators.includes(input)){
+        display.value += input;
+        return;
+    }
+}
+
 function clearDisplay(){
     display.value = "";
     calculationDone = false;
@@ -97,6 +131,24 @@ function calculate(){
     display.value =  parseFloat(safeEvaluate(display.value).toPrecision(9));
     safeEvaluate(display.value);
     calculationDone = true;
+}
+
+function reverseSign(){
+    const firstChar = display.value[0];
+    if (firstChar === "-"){
+        display.value = display.value.substring(1);
+    }
+    else{
+        if (display.value[0] === "0" && display.value.length == 1){
+            return;
+        }
+        display.value = "-" + display.value;
+    }
+}
+
+function calculatePercentage(){
+    var result = display.value / 100;
+    display.value = result;
 }
 
 document.addEventListener("keydown", function(event) {
