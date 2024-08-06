@@ -3,11 +3,15 @@ const display = document.getElementById('display');
 let calculationDone = false;
 let decimal = false;
 const operators = ["+", "-", "*", "/"];
-// adding 2 dots after zero even if i click . only once
-
 
 function appendToDisplay(input){
     var lastChar = display.value[display.value.length - 1];
+
+    // Cannot add operators after "Error"
+    if(display.value === "Error"){
+        operatorAfterError(input);
+        return;
+    }
 
     // Checking calculation if it's done
     if (calculationDone){
@@ -26,15 +30,28 @@ function appendToDisplay(input){
         return;
     }
 
+    // Can't put multiple dots (.) 
     if (lastChar === "." && input === "."){
         return;
     }
-
-    // Check the decimal after operators
-    if (operators.includes(lastChar)){
-        checkDecimalAfterOperators(input);
+    
+    // Prevent multiple operators and handle replacement of the last operator
+    if (operators.includes(input)) {
+        if (display.value !== "" || input === "-") {
+            if (operators.includes(lastChar)) {
+                display.value = display.value.slice(0, -1) + input;
+            } else {
+                display.value += input;
+            }
+            decimal = false;
+        }
         return;
     }
+
+    // if (operators.includes(lastChar) && operators.includes(input)) {
+    //     display.value = display.value.slice(0, -1) + input;
+    //     return;
+    // }
 
     if (display.value === "0" && !operators.includes(input) && input !== ".") {
         if (input === "0") {
@@ -52,30 +69,17 @@ function appendToDisplay(input){
         return;
     }
 
-    if (operators.includes(input)){
-        if (display.value !== "" || input === "-"){
-            if (operators.includes(lastChar)){
-                if (input != lastChar){
-                    display.value = display.value.slice(0, -1) + input;
-                }
-            }
-            else{
-                display.value += input;
-            }
-            decimal = false;
-        }
-    }
-    else{
-        if (input === "."){
-            if (!decimal) {
-                display.value += input;
-                decimal = true;
-            }
-        } else { 
+    if (input === ".") {
+        if (!decimal) {
             display.value += input;
+            decimal = true;
         }
-        decimal = display.value.includes(".");
-    }        
+    } else {
+        display.value += input;
+    }
+
+    decimal = display.value.includes(".");
+
 }
 
 function checkDecimalAtFirst(input){
@@ -85,7 +89,7 @@ function checkDecimalAtFirst(input){
         }
         // if it's -, allow it
         else if (input === "-"){
-            display.value = "-";
+            display.value = "-";    
         }
         else if(!operators.includes(input)){
             display.value += input;
@@ -93,12 +97,11 @@ function checkDecimalAtFirst(input){
 }
 
 function checkDecimalAfterOperators(input){
-    if (input === "." && display.value.length > 0){
-        return;
-    }
-    else if(!operators.includes(input)){
+    if (input === "." && !operators.includes(lastChar)) {
+        display.value += "0.";
+        decimal = true;
+    } else if (!operators.includes(input)) {
         display.value += input;
-        return;
     }
 }
 
@@ -127,10 +130,28 @@ function safeEvaluate(expression) {
     }
 }
 
+function operatorAfterError(input){
+    if (operators.includes(input)){
+        return;
+    }
+}
+
 function calculate(){
-    display.value =  parseFloat(safeEvaluate(display.value).toPrecision(9));
-    safeEvaluate(display.value);
-    calculationDone = true;
+    try{
+        const result = safeEvaluate(display.value);
+
+        if (result === Infinity || result === -Infinity){
+            display.value = "Error";
+        }
+        else{
+            display.value =  parseFloat(safeEvaluate(display.value).toPrecision(9));   
+             calculationDone = true;
+        }
+    }
+    catch(e){
+        display.value = "Error";
+    }
+    
 }
 
 function reverseSign(){
@@ -147,8 +168,9 @@ function reverseSign(){
 }
 
 function calculatePercentage(){
-    var result = display.value / 100;
+    var result = parseFloat(safeEvaluate(display.value[0]/100.0).toPrecision(9));
     display.value = result;
+    calculationDone = true;
 }
 
 document.addEventListener("keydown", function(event) {
