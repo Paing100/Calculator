@@ -11,7 +11,12 @@
 
         <div id="calculator">
             <input id="display" readonly>
-            <div id="keys">
+            <div id="keys">                
+                <button onclick="clearDisplay()">C</button>
+                <button onclick="reverseSign()">+/-</button>
+                <button onclick="calculatePercentage()">%</button>
+                <button onclick="appendToDisplay('/')" class="operator">/</button>
+
                 <button onclick="appendToDisplay('7')">7</button>
                 <button onclick="appendToDisplay('8')">8</button>
                 <button onclick="appendToDisplay('9')">9</button>
@@ -24,13 +29,10 @@
                 <button onclick="appendToDisplay('2')">2</button>
                 <button onclick="appendToDisplay('3')">3</button>
                 <button onclick="appendToDisplay('*')" class="operator">*</button>
-                <button onclick="appendToDisplay('0')">0</button>
+                <button onclick="appendToDisplay('0')" id="zero">0</button>
                 <button onclick="appendToDisplay('.')">.</button>
 
-                <button onclick="calculate()">=</button>                
-                <button onclick="appendToDisplay('/')" class="operator">/</button>
-
-                <button onclick="clearDisplay()" class="operator">C</button>
+                <button onclick="calculate()" class="operator">=</button>                
 
             </div>
         </div>
