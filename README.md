@@ -20,7 +20,7 @@ git clone https://github.com/Paing100/Calculator.git
 2.  Navigate to the Project Directory:
 
 ```bash
-cd Calculator
+cd Calculator\Calculator
 ```
 3. Run the Application:
 
