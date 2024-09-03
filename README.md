@@ -5,7 +5,8 @@ A simple and user-friendly calculator application built to perform basic arithme
 
 ## Features
 
-Basic Arithmetic Operations: Perform addition, subtraction, multiplication, and division. Clear Button: Allows users to reset the current calculation.
+- Basic Arithmetic Operations: Perform addition, subtraction, multiplication, and division.
+- Clear Button: Allows users to reset the current calculation.
 
 
 ## Installation 
@@ -17,7 +18,7 @@ To run this calculator application on your local machine, follow these steps:
 ```bash
 git clone https://github.com/Paing100/Calculator.git
 ```
-2.  Navigate to the Project Directory:
+2. Navigate to the Project Directory:
 
 ```bash
 cd Calculator\Calculator
@@ -27,6 +28,8 @@ cd Calculator\Calculator
 ```bash
 start index.html
 ```
+or double-click on index.html to open it in your default browser.
+
 
 ## Screenshot 
 
@@ -34,7 +37,9 @@ start index.html
 
 ## Technologies Used
 
-HTML, CSS, JavaScript
+- HTML
+- CSS
+- JavaScript
 
 ## Future Enhancements
 
